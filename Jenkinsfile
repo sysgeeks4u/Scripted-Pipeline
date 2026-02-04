@@ -6,7 +6,7 @@ node('built-in')
 
      try
      {
-        sh 'mvn packa'  //This might Fail
+        sh 'mvn package'  //This might Fail
 
      }
 
