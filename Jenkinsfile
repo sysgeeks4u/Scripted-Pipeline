@@ -12,19 +12,19 @@ node('built-in')
 
     stage('Continuous Deployment') 
     {
-    deploy adapters: [tomcat9(credentialsId: 'admin', path: '', url: 'http://54.81.255.134:8080')], contextPath: 'test-app', war: '**/*.war'
+    deploy adapters: [tomcat9(credentialsId: 'admin', path: '', url: 'http://172.31.24.35:8080')], contextPath: 'test-app', war: '**/*.war'
     }
     
     stage('Continuous Test') 
     {
     git branch: 'main', url: 'https://github.com/sysgeeks4u/Functional-Testing.git'
 
-    sh 'java -jar /var/lib/jenkins/workspace/Testing/testing.jar'
+    sh 'java -jar /var/lib/jenkins/workspace/Scripted-Pipeline/testing.jar'
     }
     
     stage('Continuous Delivery') 
     {
-    deploy adapters: [tomcat9(credentialsId: 'admin', path: '', url: 'http://54.81.255.134:8080')], contextPath: 'test-app', war: '**/*.war'
+    deploy adapters: [tomcat9(credentialsId: 'admin', path: '', url: 'http://172.31.68.42:8080')], contextPath: 'test-app', war: '**/*.war'
     }
 }
 
