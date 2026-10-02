@@ -1,47 +1,36 @@
-node('built-in') 
+node('built-in')
 {
-    stage('Continuous Download') 
+    stage('Continuous Download')
     {
-      git branch: 'main', url: 'https://github.com/sysgeeks4u/Maven-Tomcat.git'
-
-     try
-     {
-        sh 'mvn package'  //This might Fail
-
-     }
-
-     catch (Exception e)
-     {
-      echo "Build is Faild"
-      // Email Notification
-
-      mail bcc: '', body: 'CI CD & CD Faild', cc: 'rnraju4u@gmail.com', from: '', replyTo: '', subject: 'CI_CD_Process', to: 'ram.ashokit@gmail.com'
-      exit(1)
-     }
-
-    git branch: 'main', url: 'https://github.com/sysgeeks4u/Maven-Tomcat.git'
+        //It is a repo for continuous download
+        git branch: 'main', url: 'https://github.com/sysgeeks4u/Maven-Tomcat.git'
     }
 
-    stage('Continuous Build') 
+    stage('Continuous Build')
     {
-    sh 'mvn package'
+        //execute maven command for building application
+        sh 'mvn package'
     }
 
-    stage('Continuous Deployment') 
+    stage('Continuous Delivery')
     {
-    deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcattest', path: '', url: 'http://172.31.24.35:8080')], contextPath: 'testapp', war: '**/*.war'
+        //Delivering application on a staging servers
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'test-admin', path: '', url: 'http://172.31.22.81:8080')], contextPath: 'testapp', war: '**/*.war'
     }
-    
-    stage('Continuous Test') 
-    {
-    git branch: 'main', url: 'https://github.com/sysgeeks4u/Functional-Testing.git'
 
-    sh 'java -jar /var/lib/jenkins/workspace/Scripted-Pipeline/testing.jar'
+    stage('Continuous Test')
+    {
+        //Download Testing software from repo
+        git branch: 'main', url: 'https://github.com/sysgeeks4u/Functional-Testing.git'
+
+        //Execute testing.jar file
+        sh 'java -jar /var/lib/jenkins/workspace/Scripted-Pipeline/testing.jar'
+    }
+
+    stage('Continuous Deployment')
+    {
+        //Deploying application on live servers/prod servers
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'prodserver_admin', path: '', url: 'http://172.31.24.228:8080')], contextPath: 'prodapp', war: '**/*.war'
     }
     
-    stage('Continuous Delivery') 
-    {
-    deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcatprod', path: '', url: 'http://172.31.68.42:8080')], contextPath: 'prodapp', war: '**/*.war'
-    }
 }
-
