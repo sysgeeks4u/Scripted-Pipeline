@@ -15,7 +15,7 @@ node('built-in')
     stage('Continuous Delivery')
     {
         //Delivering application on a staging servers
-        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'test-admin', path: '', url: 'http://172.31.22.81:8080')], contextPath: 'testapp', war: '**/*.war'
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'Testserver', path: '', url: 'http://172.31.24.53:8080/')], contextPath: 'testapp', war: '**/*.war'
     }
 
     stage('Continuous Test')
@@ -30,7 +30,7 @@ node('built-in')
     stage('Continuous Deployment')
     {
         //Deploying application on live servers/prod servers
-        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'prodserver_admin', path: '', url: 'http://172.31.24.228:8080')], contextPath: 'prodapp', war: '**/*.war'
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'prodserver', path: '', url: 'http://172.31.37.189:8080/')], contextPath: 'prodapp', war: '**/*.war'
     }
     
 }
